@@ -31,7 +31,6 @@ double CalculateExpression(string Expression) {
 			ForExpression += ExpressionPart;
 	}
 	Expression = ForExpression;
-	ForExpression = "";
 	Stack<char> Operations;
 	Stack<double> Result;
 	for(size_t i = 0; i < Expression.size(); ++i) {
