@@ -20,16 +20,13 @@ double Calculate(double FirstValue, double SecondValue, char Operation) {
 		return FirstValue / SecondValue;
 	}
 	if(Operation == '^') {
-		double NumberInPower = 1;
-		for(size_t i = 0; i < SecondValue; ++i)
-			NumberInPower *= FirstValue;
-		return NumberInPower;
+		return pow(FirstValue, SecondValue);
 	}
 	return 0;
 }
 double CalculateExpression(string Expression) {
 	string ForExpression {};
-	for(char ExpressionPart : Expression ) {
+	for(char ExpressionPart: Expression) {
 		if(ExpressionPart != ' ')
 			ForExpression += ExpressionPart;
 	}
@@ -50,12 +47,12 @@ double CalculateExpression(string Expression) {
 			if(Expression[i] == '(') {
 				if(Expression[i + 1] == '-') {
 					++i;
+					ForExpression = "";
 					while(Expression[i] != ')') {
-						ForExpression = "";
 						ForExpression += Expression[i];
 						++i;
 					}
-					Result << -std::stod(ForExpression);
+					Result << std::stod(ForExpression);
 				}
 				else
 					Operations << Expression[i];
@@ -85,5 +82,5 @@ double CalculateExpression(string Expression) {
 		double FirstValue = Result >> 0;
 		Result << Calculate(FirstValue, SecondValue, Operations >> 0);
 	}
-	return Result.top();
+	return Result >>= 0;
 }

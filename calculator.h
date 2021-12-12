@@ -2,6 +2,7 @@
 #define LAB8__CALCULATOR_H_
 
 #include "Stack.h"
+#include "cmath"
 
 bool IsOperation(char PartOfExpression);
 int Priority(char PartOfExpression);
