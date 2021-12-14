@@ -9,14 +9,15 @@ using namespace std;
 template<typename T>
 class Stack {
 private:
-	enum {MAX = INT_MAX};
-	int Top;
-	T* StackOnArray = new T[MAX];
+	const int GrowsFactor = 10;
+	int Capacity;
+	T* StackOnArray = new T[Capacity];
 public:
 	int Size;
 	Stack();
 	bool IsEmpty();
 	T top();
+	void ResizeIfNeeded();
 	void push(T Value);
 	T pop();
 	void print(ostream& Out);
@@ -39,32 +40,42 @@ public:
 	T& operator[](const int Index);
 };
 template<typename T>
-Stack<T>::Stack(): Top(0), Size(0) {}
+Stack<T>::Stack(): Size(0), Capacity(0) {}
 template<typename T>
 bool Stack<T>::IsEmpty() {return !Size;}
 template<typename T>
 T Stack<T>::top() {
 	if(IsEmpty())
 		throw runtime_error("Stack is empty");
-	return StackOnArray[Top];
+	return StackOnArray[Size];
+}
+template<typename T>
+void Stack<T>::ResizeIfNeeded() {
+	if(Size + 1> Capacity) {
+		T *NewStackOnArray = new T[Capacity + GrowsFactor];
+		for(size_t i = 0; i < Size; ++i)
+			NewStackOnArray[i] = StackOnArray[i];
+		Capacity += GrowsFactor;
+		delete[] StackOnArray;
+		StackOnArray = NewStackOnArray;
+	}
 }
 template<typename T>
 void Stack<T>::push(T Value) {
-	StackOnArray[++Top] = Value;
-	++Size;
+	ResizeIfNeeded();
+	StackOnArray[++Size] = Value;
 }
 template<typename T>
 T Stack<T>::pop() {
 	if(IsEmpty())
 		throw runtime_error("Stack is empty");
-	T Value = StackOnArray[Top];
-	--Top;
+	T Value = StackOnArray[Size];
 	--Size;
 	return Value;
 }
 template<typename T>
 void Stack<T>::print(ostream& Out) {
-	for(size_t i = Top; i > 0; --i)
+	for(size_t i = Size; i > 0; --i)
 		Out << StackOnArray[i] << '\n';
 }
 template<typename T>
