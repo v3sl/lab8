@@ -51,7 +51,7 @@ double CalculateExpression(string Expression) {
 						ForExpression += Expression[i];
 						++i;
 					}
-					Result << std::stod(ForExpression);
+					Result << stod(ForExpression);
 				}
 				else
 					Operations << Expression[i];
@@ -72,7 +72,7 @@ double CalculateExpression(string Expression) {
 					++i;
 				}
 				--i;
-				Result << std::stod(ForExpression);
+				Result << stod(ForExpression);
 			}
 		}
 	}

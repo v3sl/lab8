@@ -28,7 +28,7 @@ public:
 	template<typename T1>
 	friend T1 operator>>(Stack<T1>& InputStack, int Value);
 	template<typename T1>
-	friend T1 operator<<=(Stack<T1>& InputStack, int Value);
+	friend bool operator<<=(Stack<T1>& InputStack, int Value);
 	template<typename T1>
 	friend T1 operator>>=(Stack& InputStack, int Value);
 	friend bool operator==(const Stack<T>& FirstInputStack, Stack<T>& SecondInputStack);
@@ -120,7 +120,7 @@ T1 operator<<(Stack<T1>& InputStack, T1 Value) {InputStack.push(Value);}
 template<typename T1>
 T1 operator>>(Stack<T1>& InputStack, int Value) {InputStack.pop();}
 template<typename T1>
-T1 operator<<=(Stack<T1>& InputStack, int Value) {InputStack.IsEmpty();}
+bool operator<<=(Stack<T1>& InputStack, int Value) {return !(InputStack.IsEmpty() == Value);}
 template<typename T1>
 T1 operator>>=(Stack<T1>& InputStack, int Value) {InputStack.top();}
 
