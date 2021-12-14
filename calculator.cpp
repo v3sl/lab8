@@ -44,13 +44,10 @@ double CalculateExpression(string Expression) {
 		}
 		else {
 			if(Expression[i] == '(') {
-				if(Expression[i + 1] == '-') {
-					++i;
+				if(Expression[i++] == '-') {
 					ForExpression = "";
-					while(Expression[i] != ')') {
+					while(Expression[i++] != ')')
 						ForExpression += Expression[i];
-						++i;
-					}
 					Result << stod(ForExpression);
 				}
 				else
@@ -67,10 +64,8 @@ double CalculateExpression(string Expression) {
 			else {
 				ForExpression = "";
 				while(!IsOperation(Expression[i]) && Expression[i] != ')' && Expression[i] != '('
-					&& i != Expression.size()) {
-					ForExpression += Expression[i];
-					++i;
-				}
+					&& i != Expression.size())
+					ForExpression += Expression[i++];
 				--i;
 				Result << stod(ForExpression);
 			}
