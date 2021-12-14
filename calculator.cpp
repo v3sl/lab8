@@ -19,9 +19,8 @@ double Calculate(double FirstValue, double SecondValue, char Operation) {
 			throw runtime_error("Cant' divide on 0");
 		return FirstValue / SecondValue;
 	}
-	if(Operation == '^') {
+	if(Operation == '^')
 		return pow(FirstValue, SecondValue);
-	}
 	return 0;
 }
 double CalculateExpression(string Expression) {
@@ -35,10 +34,10 @@ double CalculateExpression(string Expression) {
 	Stack<double> Result;
 	for(size_t i = 0; i < Expression.size(); ++i) {
 		if(IsOperation(Expression[i])) {
-			while(!(Operations <<= 0) && Priority(Expression[i]) <= Priority(Operations >>= 0)) {
-				double SecondValue = Result >> 0;
-				double FirstValue = Result >> 0;
-				Result << Calculate(FirstValue, SecondValue, Operations >> 0);
+			while(!(Operations <<= 0) && Priority(Expression[i]) <= Priority(Operations >>= 1)) {
+				double SecondValue = Result >> 1;
+				double FirstValue = Result >> 1;
+				Result << Calculate(FirstValue, SecondValue, Operations >> 1);
 			}
 			Operations << Expression[i];
 		}
@@ -55,12 +54,12 @@ double CalculateExpression(string Expression) {
 					Operations << Expression[i];
 			}
 			else if(Expression[i] == ')') {
-				while((Operations >>= 0) != '(') {
-					double SecondValue = Result >> 0;
-					double FirstValue = Result >> 0;
-					Result << Calculate(FirstValue, SecondValue, Operations >> 0);
+				while((Operations >>= 1) != '(') {
+					double SecondValue = Result >> 1;
+					double FirstValue = Result >> 1;
+					Result << Calculate(FirstValue, SecondValue, Operations >> 1);
 				}
-				Operations >> 0;
+				Operations >> 1;
 			}
 			else {
 				ForExpression = "";
@@ -74,9 +73,9 @@ double CalculateExpression(string Expression) {
 		}
 	}
 	while(!(Operations <<= 0)) {
-		double SecondValue = Result >> 0;
-		double FirstValue = Result >> 0;
-		Result << Calculate(FirstValue, SecondValue, Operations >> 0);
+		double SecondValue = Result >> 1;
+		double FirstValue = Result >> 1;
+		Result << Calculate(FirstValue, SecondValue, Operations >> 1);
 	}
-	return Result >>= 0;
+	return Result >>= 1;
 }
