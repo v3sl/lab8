@@ -118,10 +118,16 @@ T& Stack<T>::operator[](const int Index) {return StackOnArray[Index];}
 template<typename T1>
 T1 operator<<(Stack<T1>& InputStack, T1 Value) {InputStack.push(Value);}
 template<typename T1>
-T1 operator>>(Stack<T1>& InputStack, int Value) {InputStack.pop();}
+T1 operator>>(Stack<T1>& InputStack, int Value) {
+	Value = InputStack.pop();
+	return Value;
+}
 template<typename T1>
 bool operator<<=(Stack<T1>& InputStack, int Value) {return !(InputStack.IsEmpty() == Value);}
 template<typename T1>
-T1 operator>>=(Stack<T1>& InputStack, int Value) {InputStack.top();}
+T1 operator>>=(Stack<T1>& InputStack, int Value) {
+	Value = InputStack.top();
+	return Value;
+}
 
 #endif //LAB8__STACK_H_
