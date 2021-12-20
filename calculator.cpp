@@ -69,9 +69,17 @@ double CalculateExpression(string Expression) {
 						ForExpression += Expression[i];
 					}
 					ForExpressionInBrackets = CalculateExpression(ForExpression);
+					Result << -ForExpressionInBrackets;
+					++i;
 				}
-				Result << -ForExpressionInBrackets;
-				++i;
+				else{
+					while(!IsOperation(Expression[i]))
+						ForExpression += Expression[i++];
+					Result << stod(ForExpression);
+					++i;
+				}
+
+
 			}
 		} else {
 			if(Expression[i] == '(') {
@@ -90,7 +98,7 @@ double CalculateExpression(string Expression) {
 					ForExpression += Expression[i++];
 				}
 				--i;
-				Result << stod(ForExpression);
+				Result << -stod(ForExpression);
 			}
 		}
 	}
