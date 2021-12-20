@@ -1,5 +1,10 @@
 #include "calculator.h"
 
+static double ForPopExpression = 0;
+static char ForPopOperation = '0';
+static double ForTopExpression = 0;
+static char ForTopOperation = '0';
+
 bool IsOperation(char PartOfExpression) {
 	return PartOfExpression == '*' || PartOfExpression == '/' || PartOfExpression == '+' || PartOfExpression == '-'
 	       || PartOfExpression == '^';
@@ -34,10 +39,10 @@ double CalculateExpression(string Expression) {
 	Stack<double> Result;
 	for(int i = 0; i < Expression.size(); ++i) {
 		if(IsOperation(Expression[i])) {
-			while(!(Operations <<= 0) && Priority(Expression[i]) <= Priority(Operations >>= 1)) {
-				double SecondValue = Result >> static_cast<double>(1);
-				double FirstValue = Result >> static_cast<double>(1);
-				Result << Calculate(FirstValue, SecondValue, Operations >> static_cast<char>(1));
+			while(!(Operations <<= 0) && Priority(Expression[i]) <= Priority(Operations >>= ForTopOperation)) {
+				double SecondValue = Result >> ForPopExpression;
+				double FirstValue = Result >> ForPopExpression;
+				Result << Calculate(FirstValue, SecondValue, Operations >> ForPopOperation);
 			}
 			Operations << Expression[i];
 		} else {
@@ -52,12 +57,12 @@ double CalculateExpression(string Expression) {
 				} else
 					Operations << Expression[i];
 			} else if(Expression[i] == ')') {
-				while((Operations >>= 1) != '(') {
-					double SecondValue = Result >> static_cast<double>(1);
-					double FirstValue = Result >> static_cast<double>(1);
-					Result << Calculate(FirstValue, SecondValue, Operations >> static_cast<char>(1));
+				while((Operations >>= ForTopOperation) != '(') {
+					double SecondValue = Result >> ForPopExpression;
+					double FirstValue = Result >> ForPopExpression;
+					Result << Calculate(FirstValue, SecondValue, Operations >> ForPopOperation);
 				}
-				Operations >> static_cast<char>(1);
+				Operations >> ForPopOperation;
 			} else {
 				ForExpression = " ";
 				while(!IsOperation(Expression[i]) && Expression[i] != ')' && Expression[i] != '('
@@ -70,9 +75,9 @@ double CalculateExpression(string Expression) {
 		}
 	}
 	while(!(Operations <<= 0)) {
-		double SecondValue = Result >> static_cast<double>(1);
-		double FirstValue = Result >> static_cast<double>(1);
-		Result << Calculate(FirstValue, SecondValue, Operations >> static_cast<char>(1));
+		double SecondValue = Result >> ForPopExpression;
+		double FirstValue = Result >> ForPopExpression;
+		Result << Calculate(FirstValue, SecondValue, Operations >> ForPopOperation);
 	}
-	return Result >>= 1;
+	return Result >>= ForTopExpression;
 }
