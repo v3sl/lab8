@@ -53,6 +53,9 @@ double CalculateExpression(string Expression) {
 						ForExpression += Expression[i++];
 				}
 				Result << stod(ForExpression);
+				cout << Result.top();
+				if(i+1 == Expression.size())
+					return Result >>= ForTopExpression;
 			}
 			while(!(Operations <<= 0) && Priority(Expression[i]) <= Priority(Operations >>= ForTopOperation)) {
 				double SecondValue = Result >> ForPopExpression;
