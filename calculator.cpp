@@ -47,14 +47,13 @@ double CalculateExpression(string Expression) {
 						ForExpression += Expression[i];
 					ForExpressionInBrackets = CalculateExpression(ForExpression);
 					ForExpression = to_string(-ForExpressionInBrackets);
-				}
-				else {
+				} else {
 					while(!IsOperation(Expression[i]))
 						ForExpression += Expression[i++];
 				}
 				Result << stod(ForExpression);
 				cout << Result.top();
-				if(i+1 == Expression.size())
+				if(i + 1 == Expression.size())
 					return Result >>= ForTopExpression;
 			}
 			while(!(Operations <<= 0) && Priority(Expression[i]) <= Priority(Operations >>= ForTopOperation)) {
@@ -65,7 +64,7 @@ double CalculateExpression(string Expression) {
 			Operations << Expression[i];
 			if(Expression[i + 1] == '-') {
 				if(Expression[i + 2] == '(') {
-					i+=2;
+					i += 2;
 					ForExpression = "";
 					while(Expression[++i] != ')') {
 						ForExpression += Expression[i];
