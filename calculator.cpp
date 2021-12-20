@@ -39,12 +39,25 @@ double CalculateExpression(string Expression) {
 	Stack<double> Result;
 	for(int i = 0; i < Expression.size(); ++i) {
 		if(IsOperation(Expression[i])) {
+			if(i == 0 && Expression[i++] == '-'){
+				while(!IsOperation(Expression[i]))
+					ForExpression += Expression[i++];
+				Result << stod(ForExpression);
+			}
 			while(!(Operations <<= 0) && Priority(Expression[i]) <= Priority(Operations >>= ForTopOperation)) {
 				double SecondValue = Result >> ForPopExpression;
 				double FirstValue = Result >> ForPopExpression;
 				Result << Calculate(FirstValue, SecondValue, Operations >> ForPopOperation);
 			}
 			Operations << Expression[i];
+			if(Expression[i + 1] == '-') {
+				++i;
+				ForExpression = " ";
+				while(!IsOperation(Expression[i+1]) && i != Expression.size())
+					ForExpression += Expression[i++];
+				--i;
+				Result << stod(ForExpression);
+			}
 		} else {
 			if(Expression[i] == '(') {
 				if(Expression[i + 1] == '-') {
@@ -81,3 +94,4 @@ double CalculateExpression(string Expression) {
 	}
 	return Result >>= ForTopExpression;
 }
+
