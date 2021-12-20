@@ -4,6 +4,7 @@ static double ForPopExpression = 0;
 static char ForPopOperation = '0';
 static double ForTopExpression = 0;
 static char ForTopOperation = '0';
+static double ForExpressionInBrackets = 0;
 
 bool IsOperation(char PartOfExpression) {
 	return PartOfExpression == '*' || PartOfExpression == '/' || PartOfExpression == '+' || PartOfExpression == '-'
@@ -39,9 +40,18 @@ double CalculateExpression(string Expression) {
 	Stack<double> Result;
 	for(int i = 0; i < Expression.size(); ++i) {
 		if(IsOperation(Expression[i])) {
-			if(i == 0 && Expression[i++] == '-'){
-				while(!IsOperation(Expression[i]))
-					ForExpression += Expression[i++];
+			if(i == 0 && Expression[i++] == '-') {
+				if(Expression[i] == '(') {
+					ForExpression = "";
+					while(Expression[++i] != ')' && i != Expression.size())
+						ForExpression += Expression[i];
+					ForExpressionInBrackets = CalculateExpression(ForExpression);
+					ForExpression = to_string(-ForExpressionInBrackets);
+				}
+				else {
+					while(!IsOperation(Expression[i]))
+						ForExpression += Expression[i++];
+				}
 				Result << stod(ForExpression);
 			}
 			while(!(Operations <<= 0) && Priority(Expression[i]) <= Priority(Operations >>= ForTopOperation)) {
@@ -51,24 +61,20 @@ double CalculateExpression(string Expression) {
 			}
 			Operations << Expression[i];
 			if(Expression[i + 1] == '-') {
+				if(Expression[i + 2] == '(') {
+					i+=2;
+					ForExpression = "";
+					while(Expression[++i] != ')') {
+						ForExpression += Expression[i];
+					}
+					ForExpressionInBrackets = CalculateExpression(ForExpression);
+				}
+				Result << -ForExpressionInBrackets;
 				++i;
-				ForExpression = " ";
-				while(!IsOperation(Expression[i+1]) && i != Expression.size())
-					ForExpression += Expression[i++];
-				--i;
-				Result << stod(ForExpression);
 			}
 		} else {
 			if(Expression[i] == '(') {
-				if(Expression[i + 1] == '-') {
-					++i;
-					ForExpression = "";
-					while(Expression[i] != ')')
-						ForExpression += Expression[i++];
-					Result << stod(ForExpression);
-					++i;
-				} else
-					Operations << Expression[i];
+				Operations << Expression[i];
 			} else if(Expression[i] == ')') {
 				while((Operations >>= ForTopOperation) != '(') {
 					double SecondValue = Result >> ForPopExpression;
