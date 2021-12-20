@@ -2,7 +2,7 @@
 
 bool IsOperation(char PartOfExpression) {
 	return PartOfExpression == '*' || PartOfExpression == '/' || PartOfExpression == '+' || PartOfExpression == '-'
-		|| PartOfExpression == '^';
+	       || PartOfExpression == '^';
 }
 int Priority(char PartOfExpression) {
 	if(PartOfExpression == '^') return 3;
@@ -32,16 +32,15 @@ double CalculateExpression(string Expression) {
 	Expression = ForExpression;
 	Stack<char> Operations;
 	Stack<double> Result;
-	for(size_t i = 0; i < Expression.size(); ++i) {
+	for(int i = 0; i < Expression.size(); ++i) {
 		if(IsOperation(Expression[i])) {
 			while(!(Operations <<= 0) && Priority(Expression[i]) <= Priority(Operations >>= 1)) {
-				double SecondValue = Result >> 1;
-				double FirstValue = Result >> 1;
-				Result << Calculate(FirstValue, SecondValue, Operations >> 1);
+				double SecondValue = Result >> static_cast<double>(1);
+				double FirstValue = Result >> static_cast<double>(1);
+				Result << Calculate(FirstValue, SecondValue, Operations >> static_cast<char>(1));
 			}
 			Operations << Expression[i];
-		}
-		else {
+		} else {
 			if(Expression[i] == '(') {
 				if(Expression[i + 1] == '-') {
 					++i;
@@ -49,22 +48,20 @@ double CalculateExpression(string Expression) {
 					while(Expression[i] != ')')
 						ForExpression += Expression[i++];
 					Result << stod(ForExpression);
-				}
-				else
+					++i;
+				} else
 					Operations << Expression[i];
-			}
-			else if(Expression[i] == ')') {
+			} else if(Expression[i] == ')') {
 				while((Operations >>= 1) != '(') {
-					double SecondValue = Result >> 1;
-					double FirstValue = Result >> 1;
-					Result << Calculate(FirstValue, SecondValue, Operations >> 1);
+					double SecondValue = Result >> static_cast<double>(1);
+					double FirstValue = Result >> static_cast<double>(1);
+					Result << Calculate(FirstValue, SecondValue, Operations >> static_cast<char>(1));
 				}
-				Operations >> 1;
-			}
-			else {
-				ForExpression = "";
+				Operations >> static_cast<char>(1);
+			} else {
+				ForExpression = " ";
 				while(!IsOperation(Expression[i]) && Expression[i] != ')' && Expression[i] != '('
-					&& i != Expression.size()) {
+				      && i != Expression.size()) {
 					ForExpression += Expression[i++];
 				}
 				--i;
@@ -73,9 +70,9 @@ double CalculateExpression(string Expression) {
 		}
 	}
 	while(!(Operations <<= 0)) {
-		double SecondValue = Result >> 1;
-		double FirstValue = Result >> 1;
-		Result << Calculate(FirstValue, SecondValue, Operations >> 1);
+		double SecondValue = Result >> static_cast<double>(1);
+		double FirstValue = Result >> static_cast<double>(1);
+		Result << Calculate(FirstValue, SecondValue, Operations >> static_cast<char>(1));
 	}
 	return Result >>= 1;
 }
