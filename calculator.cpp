@@ -28,24 +28,45 @@ double Calculate(double FirstValue, double SecondValue, char Operation) {
 		return pow(FirstValue, SecondValue);
 	return 0;
 }
+
 double CalculateExpression(string Expression) {
 	string ForExpression {};
-	for(char ExpressionPart: Expression) {
-		if(ExpressionPart != ' ')
-			ForExpression += ExpressionPart;
+	int CountOpenedBrackets = 0;
+	int CountClosedBrackets = 0;
+	int CountOperations = 0;
+	for(int i = 0; i < Expression.size(); ++i) {
+		if(Expression[i] != ' ')
+			ForExpression += Expression[i];
+		if(Expression[i] == '(')
+			++CountOpenedBrackets;
+		else if(Expression[i] == ')')
+			++CountClosedBrackets;
+		else if(IsOperation(Expression[i]) && Expression[i] != '(' && Expression[i] != ')' && i != Expression.size() - 1 && i != 0 && Expression[i-1] != '(')
+			++CountOperations;
+	}
+	if(CountClosedBrackets != CountOpenedBrackets)
+		throw runtime_error("Incorrect expression");
+	if(CountOperations == 0 && CountOpenedBrackets == 0)
+		return stod(Expression);
+	else if (CountOperations == 0){
+		ForExpression = "";
+		for(int i = 0; i < Expression.size(); ++i) {
+			if(Expression[i] != '(' && Expression[i] != ')')
+				ForExpression += Expression[i];
+		}
+		return stod(ForExpression);
 	}
 	Expression = ForExpression;
 	Stack<char> Operations;
 	Stack<double> Result;
 	for(int i = 0; i < Expression.size(); ++i) {
 		if(IsOperation(Expression[i])) {
-			if(i == 0 && Expression[i++] == '-'){
+			if(i == 0 && Expression[i++] == '-') {
 				if(Expression[i] == '(') {
 					string NICELABA = "0";
 					NICELABA += ForExpression;
 					return CalculateExpression(NICELABA);
-				}
-				else {
+				} else {
 					while(!IsOperation(Expression[i]))
 						ForExpression += Expression[i++];
 					Result << stod(ForExpression);
@@ -58,17 +79,16 @@ double CalculateExpression(string Expression) {
 			}
 			Operations << Expression[i];
 			if(Expression[i + 1] == '-') {
-				if(Expression[i+2] == '(') {
+				if(Expression[i + 2] == '(') {
 					++i;
 					ForExpression = "";
 					while(Expression[i] != ')')
 						ForExpression += Expression[++i];
 					Result << -CalculateExpression(ForExpression);
-				}
-				else {
+				} else {
 					ForExpression = " ";
 					i++;
-					while((!IsOperation(Expression[i]) || Expression[i] == '-')&& i != Expression.size())
+					while((!IsOperation(Expression[i]) || Expression[i] == '-') && i != Expression.size())
 						ForExpression += Expression[i++];
 					--i;
 					Result << stod(ForExpression);
@@ -82,7 +102,6 @@ double CalculateExpression(string Expression) {
 					while(Expression[i] != ')')
 						ForExpression += Expression[i++];
 					Result << CalculateExpression(ForExpression);
-					++i;
 				} else
 					Operations << Expression[i];
 			} else if(Expression[i] == ')') {
