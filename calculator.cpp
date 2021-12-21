@@ -40,9 +40,16 @@ double CalculateExpression(string Expression) {
 	for(int i = 0; i < Expression.size(); ++i) {
 		if(IsOperation(Expression[i])) {
 			if(i == 0 && Expression[i++] == '-'){
-				while(!IsOperation(Expression[i]))
-					ForExpression += Expression[i++];
-				Result << stod(ForExpression);
+				if(Expression[i] == '(') {
+					string NICELABA = "0";
+					NICELABA += ForExpression;
+					return CalculateExpression(NICELABA);
+				}
+				else {
+					while(!IsOperation(Expression[i]))
+						ForExpression += Expression[i++];
+					Result << stod(ForExpression);
+				}
 			}
 			while(!(Operations <<= 0) && Priority(Expression[i]) <= Priority(Operations >>= ForTopOperation)) {
 				double SecondValue = Result >> ForPopExpression;
@@ -59,9 +66,9 @@ double CalculateExpression(string Expression) {
 					Result << -CalculateExpression(ForExpression);
 				}
 				else {
-					++i;
 					ForExpression = " ";
-					while(!IsOperation(Expression[i+1]) && i != Expression.size())
+					i++;
+					while((!IsOperation(Expression[i]) || Expression[i] == '-')&& i != Expression.size())
 						ForExpression += Expression[i++];
 					--i;
 					Result << stod(ForExpression);
