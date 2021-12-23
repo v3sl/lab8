@@ -11,9 +11,9 @@ const int GrowsFactor = 10;
 template<typename T>
 class Stack {
 private:
-	int Capacity;
-	//T* StackOnArray = new T[Capacity];
+
 public:
+	int Capacity;
 	T* StackOnArray = new T[Capacity];
 	int Size;
 	Stack();
@@ -25,26 +25,6 @@ public:
 	void print(ostream& Out);
 	~Stack();
 	Stack& operator&=(const Stack& InputStack);
-	template<typename T1>
-	friend T1 operator<<(Stack<T1>& InputStack, T1 Value);
-	template<typename T1>
-	friend T1 operator>>(Stack<T1>& InputStack, T1 Value);
-	template<typename T1>
-	friend bool operator<<=(Stack<T1>& InputStack, bool Value);
-	template<typename T1>
-	friend T1 operator>>=(Stack& InputStack, double Value);
-	template<typename T1>
-	friend bool operator==(const Stack<T1>& FirstInputStack, Stack<T1>& SecondInputStack);
-	template<typename T1>
-	friend bool operator!=(const Stack<T1>& FirstInputStack, const Stack<T1>& SecondInputStack);
-	template<typename T1>
-	friend bool operator<(const Stack<T1>& FirstInputStack, const Stack<T1>& SecondInputStack);
-	template<typename T1>
-	friend bool operator<=(const Stack<T1>& FirstInputStack, const Stack<T1>& SecondInputStack);
-	template<typename T1>
-	friend bool operator>(const Stack<T1>& FirstInputStack, const Stack<T1>& SecondInputStack);
-	template<typename T1>
-	friend bool operator>=(const Stack<T1>& FirstInputStack, const Stack<T1>& SecondInputStack);
 	T& operator[](int Index);
 };
 template<typename T>
@@ -89,10 +69,15 @@ template<typename T>
 Stack<T>::~Stack() {delete[] StackOnArray;}
 template<typename T>
 Stack<T>& Stack<T>::operator&=(const Stack& InputStack) {
-	this->size = InputStack.size;
-	for(size_t i = 0; i <= Size; ++i) {
-		StackOnArray[i] = InputStack.st[i];
+	this->Size = InputStack.size;
+	delete[] this->stackBase;
+	this->stackBase = new T[InputStack.size];
+	int temp;
+	for(int i = 0; i < InputStack.size; ++i) {
+		temp = InputStack.stackBase[i];
+		StackOnArray[i] = temp;
 	}
+	InputStack.stackBase = nullptr;
 	return *this;
 }
 template<typename T1>
@@ -122,10 +107,7 @@ bool operator>=(const Stack<T1>& FirstInputStack, const Stack<T1>& SecondInputSt
 template<typename T>
 T& Stack<T>::operator[](int Index) {return StackOnArray[Index];}
 template<typename T1>
-T1 operator<<(Stack<T1>& InputStack, T1 Value) {
-	InputStack.push(Value);
-	return Value;
-}
+void operator<<(Stack<T1>& InputStack, T1 Value) {InputStack.push(Value);}
 template<typename T1>
 T1 operator>>(Stack<T1>& InputStack, T1 Value) {
 	Value = InputStack.pop();
