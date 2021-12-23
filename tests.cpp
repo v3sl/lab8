@@ -95,20 +95,19 @@ TEST(testing_stack, test10) {
 	ASSERT_EQ(stack[2] <= stack[7], true);
 	ASSERT_EQ(stack[3] >= stack[7], false);
 }
-//TEST(testing_stack, test11) {
-//	Stack<int> stack;
-//	Stack<int> stack1;
-//	stack << 33;
-//	stack << 45;
-//	stack << 44;
-//	stack << 77;
-//	stack << 98;
-//	stack << 43;
-//	stack = stack1;
-//	ASSERT_EQ(stack1[4], 98);
-//	ASSERT_EQ(stack1.Size, 6);
-//	ASSERT_EQ(stack1.top(), 43);
-//}
+TEST(testing_stack, test11) {
+	Stack<int> stack;
+	stack << 33;
+	stack << 45;
+	stack << 44;
+	stack << 77;
+	stack << 98;
+	stack << 43;
+	Stack<int> stack1 = stack;
+	ASSERT_EQ(stack1[4], 98);
+	ASSERT_EQ(stack1.Size, 6);
+	ASSERT_EQ(stack1.top(), 43);
+}
 TEST(testing_isOperation, test12) {
 	char operations[5] = {'+', '-', '*', '/', '^'};
 	ASSERT_EQ(IsOperation(operations[0]), true);

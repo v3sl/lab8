@@ -15,6 +15,7 @@ public:
 	T* StackOnArray = new T[Capacity];
 	int Size;
 	Stack();
+	Stack(const Stack<T> &InputStack);
 	bool IsEmpty();
 	T top();
 	void ResizeIfNeeded();
@@ -27,6 +28,15 @@ public:
 };
 template<typename T>
 Stack<T>::Stack(): Size(0), Capacity(0) {}
+template<typename T>
+Stack<T>::Stack(const Stack<T>& InputStack) {
+	this->Size = InputStack.Size;
+	this->Capacity = InputStack.Capacity;
+	delete[] this->StackOnArray;
+	this->StackOnArray = new T[InputStack.Size];
+	for(int i = 0; i < InputStack.Size; ++i)
+		StackOnArray[i] = InputStack.StackOnArray[i];
+}
 template<typename T>
 bool Stack<T>::IsEmpty() {return !Size;}
 template<typename T>
@@ -64,18 +74,21 @@ void Stack<T>::print(ostream& Out) {
 		Out << StackOnArray[i] << '\n';
 }
 template<typename T>
-Stack<T>::~Stack() {delete[] StackOnArray;}
+Stack<T>::~Stack() {
+	delete[] StackOnArray;
+}
 template<typename T>
 Stack<T>& Stack<T>::operator&=(const Stack& InputStack) {
-	this->Size = InputStack.size;
-	delete[] this->stackBase;
-	this->stackBase = new T[InputStack.size];
+	Stack<T> st (InputStack);
+	this->Size = InputStack.Size;
+	this->Capacity = InputStack.Capacity;
+	delete[] this->StackOnArray;
+	this->StackOnArray = new T[InputStack.Size];
 	int temp;
-	for(int i = 0; i < InputStack.size; ++i) {
-		temp = InputStack.stackBase[i];
+	for(int i = 0; i < InputStack.Size; ++i) {
+		temp = InputStack.StackOnArray[i];
 		StackOnArray[i] = temp;
 	}
-	InputStack.stackBase = nullptr;
 	return *this;
 }
 template<typename T1>
