@@ -10,8 +10,6 @@ const int GrowsFactor = 10;
 
 template<typename T>
 class Stack {
-private:
-
 public:
 	int Capacity;
 	T* StackOnArray = new T[Capacity];
