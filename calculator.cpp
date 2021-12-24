@@ -30,16 +30,16 @@ double Calculate(double FirstValue, double SecondValue, char Operation) {
 }
 int CountOpenedBrackets(string Expression) {
 	int CountOpenedBrackets = 0;
-	for(int i = 0; i < Expression.size(); ++i) {
-		if(Expression[i] == ')')
+	for(char PartOfExpression: Expression) {
+		if(PartOfExpression == ')')
 			++CountOpenedBrackets;
 	}
 	return CountOpenedBrackets;
 }
 int CountClosedBrackets(string Expression) {
 	int CountClosedBrackets = 0;
-	for(int i = 0; i < Expression.size(); ++i) {
-		if(Expression[i] == '(')
+	for(char PartOfExpression: Expression) {
+		if(PartOfExpression == '(')
 			++CountClosedBrackets;
 	}
 	return CountClosedBrackets;
@@ -126,7 +126,7 @@ void SeventhAction(string& Expression, Stack<double>& Result, Stack<char>& Opera
 	} else
 		Operations << Expression[i];
 }
-void EighthAction(Stack<char>& Operations, Stack<double>& Result) {
+void EighthAction(Stack<double>& Result, Stack<char>& Operations) {
 	while((Operations >>= ForTopOperation) != '(') {
 		double SecondValue = Result >> ForPopExpression;
 		double FirstValue = Result >> ForPopExpression;
@@ -143,15 +143,15 @@ void NinthAction(string& Expression, Stack<double>& Result, int& i) {
 	--i;
 	Result << stod(ForExpression);
 }
-void IfNonOperation(string& Expression, Stack<char>& Operations, Stack<double>& Result, int& i) {
+void IfNonOperation(string& Expression, Stack<double>& Result, Stack<char>& Operations, int& i) {
 	if(Expression[i] == '(')
 		SeventhAction(Expression, Result, Operations, i);
 	else if(Expression[i] == ')')
-		EighthAction(Operations, Result);
+		EighthAction(Result, Operations);
 	else
 		NinthAction(Expression, Result, i);
 }
-void FinalCalculation(Stack<char>& Operations, Stack<double>& Result) {
+void FinalCalculation(Stack<double>& Result, Stack<char>& Operations) {
 	while(!(Operations <<= 0)) {
 		double SecondValue = Result >> ForPopExpression;
 		double FirstValue = Result >> ForPopExpression;
@@ -169,8 +169,8 @@ double CalculateExpression(string Expression) {
 			FifthAction(Expression, Result, Operations, i);
 			SixAction(Expression, Result, i);
 		} else
-			IfNonOperation(Expression, Operations, Result, i);
+			IfNonOperation(Expression, Result, Operations, i);
 	}
-	FinalCalculation(Operations, Result);
+	FinalCalculation(Result, Operations);
 	return Result >>= ForTopExpression;
 }

@@ -14,17 +14,17 @@ int CountClosedBrackets(string Expression);
 string DeleteSpaces(string Expression);
 void Check(string& Expression);
 void ResultIfNoOperations(string& Expression);
-double FirstAction(string &Expression);
-double SecondAction(string &Expression);
-double ThirdAction(string &ForExpression);
+double FirstAction(string& Expression);
+double SecondAction(string& Expression);
+double ThirdAction(string& ForExpression);
 double FourthAction(string& Expression);
 double IfMinus(string& Expression, Stack<double>& Result, int& i);
 void FifthAction(string& Expression, Stack<double>& Result, Stack<char>& Operations, int& i);
 void SixAction(string& Expression, Stack<double>& Result, int& i);
 void SeventhAction(string& Expression, Stack<double>& Result, Stack<char>& Operations, int& i);
-void EighthAction(Stack<char>& Operations, Stack<double>& Result);
+void EighthAction(Stack<double>& Result, Stack<char>& Operations);
 void NinthAction(string& Expression, Stack<double>& Result, int& i);
-void FinalCalculation(Stack<char>& Operations, Stack<double>& Result);
-void IfNonOperation(string& Expression, Stack<char>& Operations, Stack<double>& Result, int& i);
+void FinalCalculation(Stack<double>& Result, Stack<char>& Operations    );
+void IfNonOperation(string& Expression, Stack<double>& Result, Stack<char>& Operations, int& i);
 
 #endif //LAB8__CALCULATOR_H_
