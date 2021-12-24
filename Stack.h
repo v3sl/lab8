@@ -15,7 +15,7 @@ public:
 	T* StackOnArray = new T[Capacity];
 	int Size;
 	Stack();
-	Stack(const Stack<T> &InputStack);
+	Stack(const Stack<T>& InputStack);
 	bool IsEmpty();
 	T top();
 	void ResizeIfNeeded();
@@ -43,7 +43,7 @@ template<typename T>
 T Stack<T>::top() {
 	if(IsEmpty())
 		throw runtime_error("Stack is empty");
-	return StackOnArray[Size-1];
+	return StackOnArray[Size - 1];
 }
 template<typename T>
 void Stack<T>::ResizeIfNeeded() {
@@ -70,7 +70,7 @@ T Stack<T>::pop() {
 }
 template<typename T>
 void Stack<T>::print(ostream& Out) {
-	for(int i = Size-1; i >= 0; --i)
+	for(int i = Size - 1; i >= 0; --i)
 		Out << StackOnArray[i] << '\n';
 }
 template<typename T>
@@ -79,7 +79,7 @@ Stack<T>::~Stack() {
 }
 template<typename T>
 Stack<T>& Stack<T>::operator&=(const Stack& InputStack) {
-	Stack<T> st (InputStack);
+	Stack<T> st(InputStack);
 	this->Size = InputStack.Size;
 	this->Capacity = InputStack.Capacity;
 	delete[] this->StackOnArray;

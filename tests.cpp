@@ -1,7 +1,6 @@
 #include "gtest/gtest.h"
 #include "calculator.h"
 
-
 TEST(testing_stack, test1) {
 	Stack<int> stack;
 	ASSERT_EQ(stack.IsEmpty(), true);
@@ -201,7 +200,7 @@ TEST(testing_CalculatingTheExpression, test31) {
 	ASSERT_EQ(CalculateExpression(s), 40);
 }
 TEST(testing_CalculatingTheExpression, test32) {
-	string s = "-4^2";
+	string s = "(-4)^2";
 	ASSERT_EQ(CalculateExpression(s), 16);
 }
 TEST(testing_CalculatingTheExpression, test33) {
