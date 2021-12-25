@@ -1,176 +1,176 @@
 #include "calculator.h"
 
-static double ForPopExpression = 0;
-static char ForPopOperation = '0';
-static double ForTopExpression = 0;
-static char ForTopOperation = '0';
+static double forPopExpression = 0;
+static char forPopOperation = '0';
+static double forTopExpression = 0;
+static char forTopOperation = '0';
 
-bool IsOperation(char PartOfExpression) {
-	return PartOfExpression == '*' || PartOfExpression == '/' || PartOfExpression == '+' || PartOfExpression == '-'
-	       || PartOfExpression == '^';
+bool isOperation(char partOfExpression) {
+	return partOfExpression == '*' || partOfExpression == '/' || partOfExpression == '+' || partOfExpression == '-'
+	       || partOfExpression == '^';
 }
-int Priority(char PartOfExpression) {
-	if(PartOfExpression == '^') return 3;
-	if(PartOfExpression == '*' || PartOfExpression == '/') return 2;
-	if(PartOfExpression == '+' || PartOfExpression == '-') return 1;
+int priority(char partOfExpression) {
+	if(partOfExpression == '^') return 3;
+	if(partOfExpression == '*' || partOfExpression == '/') return 2;
+	if(partOfExpression == '+' || partOfExpression == '-') return 1;
 	return -1;
 }
-double Calculate(double FirstValue, double SecondValue, char Operation) {
-	if(Operation == '+') return FirstValue + SecondValue;
-	if(Operation == '-') return FirstValue - SecondValue;
-	if(Operation == '*') return FirstValue * SecondValue;
-	if(Operation == '/') {
-		if(SecondValue == 0)
+double calculate(double firstValue, double secondValue, char operation) {
+	if(operation == '+') return firstValue + secondValue;
+	if(operation == '-') return firstValue - secondValue;
+	if(operation == '*') return firstValue * secondValue;
+	if(operation == '/') {
+		if(secondValue == 0)
 			throw runtime_error("Cant' divide on 0");
-		return FirstValue / SecondValue;
+		return firstValue / secondValue;
 	}
-	if(Operation == '^')
-		return pow(FirstValue, SecondValue);
+	if(operation == '^')
+		return pow(firstValue, secondValue);
 	return 0;
 }
-int CountOpenedBrackets(string Expression) {
-	int CountOpenedBrackets = 0;
-	for(char PartOfExpression: Expression) {
-		if(PartOfExpression == ')')
-			++CountOpenedBrackets;
+int countOpenedBrackets(string expression) {
+	int counter = 0;
+	for(char partOfExpression: expression) {
+		if(partOfExpression == ')')
+			++counter;
 	}
-	return CountOpenedBrackets;
+	return counter;
 }
-int CountClosedBrackets(string Expression) {
-	int CountClosedBrackets = 0;
-	for(char PartOfExpression: Expression) {
-		if(PartOfExpression == '(')
-			++CountClosedBrackets;
+int countClosedBrackets(string expression) {
+	int counter = 0;
+	for(char partOfExpression: expression) {
+		if(partOfExpression == '(')
+			++counter;
 	}
-	return CountClosedBrackets;
+	return counter;
 }
-int CountOperations(string Expression) {
-	int CountOperations = 0;
-	for(int i = 0; i < Expression.size(); ++i) {
-		if(IsOperation(Expression[i]) && Expression[i] != '(' && Expression[i] != ')' && i != Expression.size() - 1 &&
-		   i != 0 && Expression[i - 1] != '(')
-			++CountOperations;
+int countOperations(string expression) {
+	int counter = 0;
+	for(int i = 0; i < expression.size(); ++i) {
+		if(isOperation(expression[i]) && expression[i] != '(' && expression[i] != ')' && i != expression.size() - 1 &&
+		   i != 0 && expression[i - 1] != '(')
+			++counter;
 	}
-	return CountOperations;
+	return counter;
 }
-void Check(string& Expression) {
-	if(CountOpenedBrackets(Expression) != CountClosedBrackets(Expression))
+void check(string& expression) {
+	if(countOpenedBrackets(expression) != countClosedBrackets(expression))
 		throw runtime_error("Incorrect expression");
 }
-void ResultIfNoOperations(string& Expression) {
-	if(CountOperations(Expression) == 0 && CountOpenedBrackets(Expression) == 0)
-		FirstAction(Expression);
-	else if(CountOperations(Expression) == 0)
-		SecondAction(Expression);
+double firstAction(string& expression) {return stod(expression);}
+double secondAction(string& expression) {
+	string forNewExpression = "";
+	for(int i = 0; i < expression.size(); ++i) {
+		if(expression[i] != '(' && expression[i] != ')')
+			forNewExpression += expression[i];
+	}
+	return stod(forNewExpression);
 }
-double IfMinus(string& Expression, Stack<double>& Result, int& i) {
-	if(Expression[i] == '(')
-		return ThirdAction(Expression);
+void resultIfNoOperations(string& expression) {
+	if(countOperations(expression) == 0 && countOpenedBrackets(expression) == 0)
+		firstAction(expression);
+	else if(countOperations(expression) == 0)
+		secondAction(expression);
+}
+double thirdAction(string& expression) {
+	string forExpressionInBrackets = "0";
+	forExpressionInBrackets += expression;
+	return calculateExpression(forExpressionInBrackets);
+}
+double fourthAction(string& expression) {
+	string forNegativeExpression = "0";
+	forNegativeExpression += expression;
+	return calculateExpression(forNegativeExpression);
+}
+double ifMinus(string& expression, int& i) {
+	if(expression[i] == '(')
+		return thirdAction(expression);
 	else
-		return FourthAction(Expression);
+		return fourthAction(expression);
 }
-double FirstAction(string& Expression) {return stod(Expression);}
-double SecondAction(string& Expression) {
-	string ForExpression = "";
-	for(int i = 0; i < Expression.size(); ++i) {
-		if(Expression[i] != '(' && Expression[i] != ')')
-			ForExpression += Expression[i];
+void fifthAction(string& expression, stack<double>& result, stack<char>& operations, int& i) {
+	while(!(operations <<= 0) && priority(expression[i]) <= priority(operations >>= forTopOperation)) {
+		double secondValue = result >> forPopExpression;
+		double firstValue = result >> forPopExpression;
+		result << calculate(firstValue, secondValue, operations >> forPopOperation);
 	}
-	return stod(ForExpression);
+	operations << expression[i];
 }
-double ThirdAction(string& Expression) {
-	string ForExpressionInBrackets = "0";
-	ForExpressionInBrackets += Expression;
-	return CalculateExpression(ForExpressionInBrackets);
-}
-double FourthAction(string& Expression) {
-	string ForNegativeExpression = "0";
-	ForNegativeExpression += Expression;
-	return CalculateExpression(ForNegativeExpression);
-}
-void FifthAction(string& Expression, Stack<double>& Result, Stack<char>& Operations, int& i) {
-	while(!(Operations <<= 0) && Priority(Expression[i]) <= Priority(Operations >>= ForTopOperation)) {
-		double SecondValue = Result >> ForPopExpression;
-		double FirstValue = Result >> ForPopExpression;
-		Result << Calculate(FirstValue, SecondValue, Operations >> ForPopOperation);
-	}
-	Operations << Expression[i];
-}
-void SixAction(string& Expression, Stack<double>& Result, int& i) {
-	string ForExpression;
-	if(Expression[i + 1] == '-') {
-		if(Expression[i + 2] == '(') {
+void sixAction(string& expression, stack<double>& result, int& i) {
+	string forNewExpression;
+	if(expression[i + 1] == '-') {
+		if(expression[i + 2] == '(') {
 			++i;
-			ForExpression = "";
-			while(Expression[i] != ')')
-				ForExpression += Expression[++i];
-			Result << -CalculateExpression(ForExpression);
+			forNewExpression = "";
+			while(expression[i] != ')')
+				forNewExpression += expression[++i];
+			result << -calculateExpression(forNewExpression);
 		} else {
-			ForExpression = " ";
+			forNewExpression = " ";
 			++i;
-			while((!IsOperation(Expression[i]) || Expression[i] == '-') && i != Expression.size())
-				ForExpression += Expression[i++];
+			while((!isOperation(expression[i]) || expression[i] == '-') && i != expression.size())
+				forNewExpression += expression[i++];
 			--i;
-			Result << stod(ForExpression);
+			result << stod(forNewExpression);
 		}
 	}
 }
-void SeventhAction(string& Expression, Stack<double>& Result, Stack<char>& Operations, int& i) {
-	string ForExpression;
-	if(Expression[i + 1] == '-') {
+void seventhAction(string& expression, stack<double>& result, stack<char>& operations, int& i) {
+	string forNewExpression;
+	if(expression[i + 1] == '-') {
 		++i;
-		ForExpression = "";
-		while(Expression[i] != ')')
-			ForExpression += Expression[i++];
-		Result << CalculateExpression(ForExpression);
+		forNewExpression = "";
+		while(expression[i] != ')')
+			forNewExpression += expression[i++];
+		result << calculateExpression(forNewExpression);
 	} else
-		Operations << Expression[i];
+		operations << expression[i];
 }
-void EighthAction(Stack<double>& Result, Stack<char>& Operations) {
-	while((Operations >>= ForTopOperation) != '(') {
-		double SecondValue = Result >> ForPopExpression;
-		double FirstValue = Result >> ForPopExpression;
-		Result << Calculate(FirstValue, SecondValue, Operations >> ForPopOperation);
+void eighthAction(stack<double>& result, stack<char>& operations) {
+	while((operations >>= forTopOperation) != '(') {
+		double SecondValue = result >> forPopExpression;
+		double FirstValue = result >> forPopExpression;
+		result << calculate(FirstValue, SecondValue, operations >> forPopOperation);
 	}
-	Operations >> ForPopOperation;
+	operations >> forPopOperation;
 }
-void NinthAction(string& Expression, Stack<double>& Result, int& i) {
-	string ForExpression = "";
-	while(!IsOperation(Expression[i]) && Expression[i] != ')' && Expression[i] != '('
-	      && i != Expression.size()) {
-		ForExpression += Expression[i++];
+void ninthAction(string& expression, stack<double>& result, int& i) {
+	string forNewExpression = "";
+	while(!isOperation(expression[i]) && expression[i] != ')' && expression[i] != '('
+	      && i != expression.size()) {
+		forNewExpression += expression[i++];
 	}
 	--i;
-	Result << stod(ForExpression);
+	result << stod(forNewExpression);
 }
-void IfNonOperation(string& Expression, Stack<double>& Result, Stack<char>& Operations, int& i) {
-	if(Expression[i] == '(')
-		SeventhAction(Expression, Result, Operations, i);
-	else if(Expression[i] == ')')
-		EighthAction(Result, Operations);
+void ifNonOperation(string& expression, stack<double>& result, stack<char>& operations, int& i) {
+	if(expression[i] == '(')
+		seventhAction(expression, result, operations, i);
+	else if(expression[i] == ')')
+		eighthAction(result, operations);
 	else
-		NinthAction(Expression, Result, i);
+		ninthAction(expression, result, i);
 }
-void FinalCalculation(Stack<double>& Result, Stack<char>& Operations) {
-	while(!(Operations <<= 0)) {
-		double SecondValue = Result >> ForPopExpression;
-		double FirstValue = Result >> ForPopExpression;
-		Result << Calculate(FirstValue, SecondValue, Operations >> ForPopOperation);
+void finalCalculation(stack<double>& result, stack<char>& operations) {
+	while(!(operations <<= 0)) {
+		double SecondValue = result >> forPopExpression;
+		double FirstValue = result >> forPopExpression;
+		result << calculate(FirstValue, SecondValue, operations >> forPopOperation);
 	}
 }
-double CalculateExpression(string Expression) {
-	ResultIfNoOperations(Expression);
-	Stack<char> Operations;
-	Stack<double> Result;
-	for(int i = 0; i < Expression.size(); ++i) {
-		if(IsOperation(Expression[i])) {
-			if(i == 0 && Expression[i++] == '-')
-				return IfMinus(Expression, Result, i);
-			FifthAction(Expression, Result, Operations, i);
-			SixAction(Expression, Result, i);
+double calculateExpression(string expression) {
+	resultIfNoOperations(expression);
+	stack<char> operations;
+	stack<double> result;
+	for(int i = 0; i < expression.size(); ++i) {
+		if(isOperation(expression[i])) {
+			if(i == 0 && expression[i++] == '-')
+				return ifMinus(expression, i);
+			fifthAction(expression, result, operations, i);
+			sixAction(expression, result, i);
 		} else
-			IfNonOperation(Expression, Result, Operations, i);
+			ifNonOperation(expression, result, operations, i);
 	}
-	FinalCalculation(Result, Operations);
-	return Result >>= ForTopExpression;
+	finalCalculation(result, operations);
+	return result >>= forTopExpression;
 }

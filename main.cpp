@@ -1,8 +1,8 @@
 #include "calculator.h"
 
 int main() {
-	string S;
-	cin >> S;
-	cout << CalculateExpression(S) << '\n';
+		string str;
+		cin >> str;
+		cout << calculateExpression(str) << '\n';
 	return 0;
 }
