@@ -137,9 +137,8 @@ void eighthAction(stack<double>& result, stack<char>& operations) {
 void ninthAction(string& expression, stack<double>& result, int& i) {
 	string forNewExpression = "";
 	while(!isOperation(expression[i]) && expression[i] != ')' && expression[i] != '('
-	      && i != expression.size()) {
+	      && i != expression.size())
 		forNewExpression += expression[i++];
-	}
 	--i;
 	result << stod(forNewExpression);
 }
