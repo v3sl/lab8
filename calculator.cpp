@@ -31,7 +31,7 @@ double calculate(double firstValue, double secondValue, char operation) {
 int countOpenedBrackets(string expression) {
 	int counter = 0;
 	for(char partOfExpression: expression) {
-		if(partOfExpression == ')')
+		if(partOfExpression == '(')
 			++counter;
 	}
 	return counter;
@@ -39,7 +39,7 @@ int countOpenedBrackets(string expression) {
 int countClosedBrackets(string expression) {
 	int counter = 0;
 	for(char partOfExpression: expression) {
-		if(partOfExpression == '(')
+		if(partOfExpression == ')')
 			++counter;
 	}
 	return counter;
@@ -57,8 +57,8 @@ void check(string& expression) {
 	if(countOpenedBrackets(expression) != countClosedBrackets(expression))
 		throw runtime_error("Incorrect expression");
 }
-double firstAction(string& expression) {return stod(expression);}
-double secondAction(string& expression) {
+double ifNoOperationsAndBrackets(string& expression) {return stod(expression);}
+double ifNoOperations(string& expression) {
 	string forNewExpression = "";
 	for(int i = 0; i < expression.size(); ++i) {
 		if(expression[i] != '(' && expression[i] != ')')
@@ -68,27 +68,27 @@ double secondAction(string& expression) {
 }
 void resultIfNoOperations(string& expression) {
 	if(countOperations(expression) == 0 && countOpenedBrackets(expression) == 0)
-		firstAction(expression);
+		ifNoOperationsAndBrackets(expression);
 	else if(countOperations(expression) == 0)
-		secondAction(expression);
+		ifNoOperations(expression);
 }
-double thirdAction(string& expression) {
+double forNegativeExpressionInBrackets(string& expression) {
 	string forExpressionInBrackets = "0";
 	forExpressionInBrackets += expression;
 	return calculateExpression(forExpressionInBrackets);
 }
-double fourthAction(string& expression) {
+double forNegativeExpression(string& expression) {
 	string forNegativeExpression = "0";
 	forNegativeExpression += expression;
 	return calculateExpression(forNegativeExpression);
 }
 double ifMinus(string& expression, int& i) {
 	if(expression[i] == '(')
-		return thirdAction(expression);
+		return forNegativeExpressionInBrackets(expression);
 	else
-		return fourthAction(expression);
+		return forNegativeExpression(expression);
 }
-void fifthAction(string& expression, stack<double>& result, stack<char>& operations, int& i) {
+void forDefaultOperations(string& expression, stack<double>& result, stack<char>& operations, int& i) {
 	while(!(operations <<= 0) && priority(expression[i]) <= priority(operations >>= forTopOperation)) {
 		double secondValue = result >> forPopExpression;
 		double firstValue = result >> forPopExpression;
@@ -96,7 +96,7 @@ void fifthAction(string& expression, stack<double>& result, stack<char>& operati
 	}
 	operations << expression[i];
 }
-void sixAction(string& expression, stack<double>& result, int& i) {
+void forNegativeValuesIfNeeded(string& expression, stack<double>& result, int& i) {
 	string forNewExpression;
 	if(expression[i + 1] == '-') {
 		if(expression[i + 2] == '(') {
@@ -115,7 +115,7 @@ void sixAction(string& expression, stack<double>& result, int& i) {
 		}
 	}
 }
-void seventhAction(string& expression, stack<double>& result, stack<char>& operations, int& i) {
+void forOpenedBracket(string& expression, stack<double>& result, stack<char>& operations, int& i) {
 	string forNewExpression;
 	if(expression[i + 1] == '-') {
 		++i;
@@ -126,7 +126,7 @@ void seventhAction(string& expression, stack<double>& result, stack<char>& opera
 	} else
 		operations << expression[i];
 }
-void eighthAction(stack<double>& result, stack<char>& operations) {
+void forClosedBracket(stack<double>& result, stack<char>& operations) {
 	while((operations >>= forTopOperation) != '(') {
 		double SecondValue = result >> forPopExpression;
 		double FirstValue = result >> forPopExpression;
@@ -134,7 +134,7 @@ void eighthAction(stack<double>& result, stack<char>& operations) {
 	}
 	operations >> forPopOperation;
 }
-void ninthAction(string& expression, stack<double>& result, int& i) {
+void forDefaultValue(string& expression, stack<double>& result, int& i) {
 	string forNewExpression = "";
 	while(!isOperation(expression[i]) && expression[i] != ')' && expression[i] != '('
 	      && i != expression.size())
@@ -144,11 +144,11 @@ void ninthAction(string& expression, stack<double>& result, int& i) {
 }
 void ifNonOperation(string& expression, stack<double>& result, stack<char>& operations, int& i) {
 	if(expression[i] == '(')
-		seventhAction(expression, result, operations, i);
+		forOpenedBracket(expression, result, operations, i);
 	else if(expression[i] == ')')
-		eighthAction(result, operations);
+		forClosedBracket(result, operations);
 	else
-		ninthAction(expression, result, i);
+		forDefaultValue(expression, result, i);
 }
 void finalCalculation(stack<double>& result, stack<char>& operations) {
 	while(!(operations <<= 0)) {
@@ -165,8 +165,8 @@ double calculateExpression(string expression) {
 		if(isOperation(expression[i])) {
 			if(i == 0 && expression[i++] == '-')
 				return ifMinus(expression, i);
-			fifthAction(expression, result, operations, i);
-			sixAction(expression, result, i);
+			forDefaultOperations(expression, result, operations, i);
+			forNegativeValuesIfNeeded(expression, result, i);
 		} else
 			ifNonOperation(expression, result, operations, i);
 	}
