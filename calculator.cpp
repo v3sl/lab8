@@ -54,8 +54,22 @@ int countOperations(string expression) {
 	return counter;
 }
 void check(string& expression) {
+	if(isOperation(expression[expression.size()-1]))
+		throw runtime_error("incorrect expression");
 	if(countOpenedBrackets(expression) != countClosedBrackets(expression))
 		throw runtime_error("Incorrect expression");
+}
+string convertExpression(string expression){
+	string newExpression;
+	for (int i = 0; i < expression.size(); ++i) {
+		if (expression[i] == '-' && expression[i + 1] == '-' ){
+			newExpression += '+';
+			i += 2;
+		}
+		newExpression += expression[i];
+	}
+	check(newExpression);
+	return  newExpression;
 }
 double ifNoOperationsAndBrackets(string& expression) {return stod(expression);}
 double ifNoOperations(string& expression) {
@@ -158,6 +172,7 @@ void finalCalculation(stack<double>& result, stack<char>& operations) {
 	}
 }
 double calculateExpression(string expression) {
+	expression = convertExpression(expression);
 	resultIfNoOperations(expression);
 	stack<char> operations;
 	stack<double> result;

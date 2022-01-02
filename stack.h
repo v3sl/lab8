@@ -10,9 +10,9 @@ const int growsFactor = 10;
 template<typename T>
 class stack {
 public:
+	int size;
 	int capacity;
 	T* stackOnArray = new T[capacity];
-	int size;
 	stack();
 	stack(const stack<T>& inputStack);
 	bool isEmpty();
