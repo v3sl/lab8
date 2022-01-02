@@ -13,6 +13,7 @@ int countOpenedBrackets(string expression);
 int countClosedBrackets(string expression);
 int countOperations(string expression);
 void check(string& expression);
+string convertExpression(string expression);
 double ifNoOperationsAndBrackets(string& expression);
 double ifNoOperations(string& expression);
 void resultIfNoOperations(string& expression);
